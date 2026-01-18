@@ -56,14 +56,4 @@ public class VideoController {
     public Response<VideoDto> updateNote(@PathVariable UUID id, @RequestBody VideoDto videoDto) {
         return new Response<>(true, 0, null, videoService.updateNote(id, videoDto.getNote()));
     }
-
-    @PatchMapping("/{id}/completed")
-    public Response<VideoDto> updateCompleted(@PathVariable UUID id, @RequestBody VideoDto videoDto) {
-        return new Response<>(true, 0, null, videoService.updateCompleted(id, videoDto.getCompleted()));
-    }
-
-    @PatchMapping("/{id}/current-state")
-    public Response<VideoDto> updateCurrentState(@PathVariable UUID id, @RequestBody VideoDto videoDto) {
-        return new Response<>(true, 0, null, videoService.updateCurrentState(id, videoDto.getCurrentState()));
-    }
 }

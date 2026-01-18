@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thirdeye3.video.manager.dtos.CombinedDto;
+import com.thirdeye3.video.manager.dtos.EndingDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
 import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import com.thirdeye3.video.manager.services.AdvertainmentService;
 import com.thirdeye3.video.manager.services.CombinedService;
+import com.thirdeye3.video.manager.services.EndingService;
 import com.thirdeye3.video.manager.services.GroupService;
 import com.thirdeye3.video.manager.services.IntroVideoService;
 import com.thirdeye3.video.manager.services.NewsService;
@@ -53,10 +55,19 @@ public class CombinedServiceImpl implements CombinedService {
 	@Autowired
 	private VideoDetailsService videoDetailsService;
 	
+	@Autowired
+	private EndingService endingService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(CombinedServiceImpl.class);
 	
 	@Override
-	public CombinedDto getVideoandActiveResources(UUID uuid) {
+	public CombinedDto getVideoandActiveResources() {
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
 		CombinedDto combinedDto = new CombinedDto();
 		combinedDto.setVideoDto(videoService.getVideoById(uuid));
 		combinedDto.setVideoSettingDto(videoSettingService.getActiveVideoSetting());
@@ -99,7 +110,13 @@ public class CombinedServiceImpl implements CombinedService {
 	}
 	
 	@Override
-	public GroupDto getGroupDetails(UUID uuid) {
+	public GroupDto getGroupDetails() {
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
 		VideoDto videoDto = videoService.getVideoById(uuid);
 		GroupDto groupDto = null;
 		if(videoDto.getIsGroupPresent())
@@ -112,6 +129,29 @@ public class CombinedServiceImpl implements CombinedService {
             throw new ResourceNotFoundException("Group details not found with ID: " + uuid);
 		}
 		return groupDto;
+	}
+
+	@Override
+	public void updateCompleted(Boolean completed) {
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
+		videoService.updateCompleted(uuid, completed);
+		
+	}
+
+	@Override
+	public void updateCurrentState(Integer currentState) {
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
+		videoService.updateCurrentState(uuid, currentState);
 	}
 
 }

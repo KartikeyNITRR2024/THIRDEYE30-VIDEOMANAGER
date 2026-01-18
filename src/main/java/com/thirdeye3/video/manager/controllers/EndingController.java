@@ -31,22 +31,14 @@ public class EndingController {
     @Autowired
     private CombinedService combinedService;
     
-    @Autowired
-    private VideoService videoService;
-
-    @GetMapping
-    public Response<EndingDto> getEnding() {
-        return new Response<>(true, 0, null, endingService.getEnding());
+    @GetMapping("/group")
+    public Response<GroupDto> getGroupDetails() {
+        return new Response<>(true, 0, null, combinedService.getGroupDetails());
     }
     
-    @GetMapping("/{id}/group")
-    public Response<GroupDto> getGroupDetails(@PathVariable UUID id) {
-        return new Response<>(true, 0, null, combinedService.getGroupDetails(id));
-    }
-    
-    @GetMapping("/{id}/combined")
-    public Response<CombinedDto> getCombinedDetails(@PathVariable UUID id) {
-        return new Response<>(true, 0, null, combinedService.getVideoandActiveResources(id));
+    @GetMapping("/combined")
+    public Response<CombinedDto> getCombinedDetails() {
+        return new Response<>(true, 0, null, combinedService.getVideoandActiveResources());
     }
     
     @PostMapping
@@ -55,13 +47,16 @@ public class EndingController {
         return new Response<>(true, 0, null, null);
     }
     
-    @PatchMapping("/{id}/completed")
-    public Response<VideoDto> updateCompleted(@PathVariable UUID id, @RequestBody VideoDto videoDto) {
-        return new Response<>(true, 0, null, videoService.updateCompleted(id, videoDto.getCompleted()));
+    @PatchMapping("/completed/{isCompleted}")
+    public Response<Void> updateCompleted(@PathVariable Integer isCompleted) {
+    	Boolean completed = (isCompleted == 1);
+    	combinedService.updateCompleted(completed);
+        return new Response<>(true, 0, null, null);
     }
 
-    @PatchMapping("/{id}/current-state")
-    public Response<VideoDto> updateCurrentState(@PathVariable UUID id, @RequestBody VideoDto videoDto) {
-        return new Response<>(true, 0, null, videoService.updateCurrentState(id, videoDto.getCurrentState()));
+    @PatchMapping("/current-state/{currentState}")
+    public Response<Void> updateCurrentState(@PathVariable Integer currentState) {
+    	combinedService.updateCurrentState(currentState);
+        return new Response<>(true, 0, null, null);
     }
 }
