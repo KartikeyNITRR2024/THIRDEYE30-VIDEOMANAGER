@@ -2,6 +2,7 @@ package com.thirdeye3.video.manager.controllers;
 
 import com.thirdeye3.video.manager.dtos.CombinedDto;
 import com.thirdeye3.video.manager.dtos.EndingDto;
+import com.thirdeye3.video.manager.dtos.GroupDateDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
 import com.thirdeye3.video.manager.dtos.Response;
 import com.thirdeye3.video.manager.dtos.StockDataDto;
@@ -32,7 +33,7 @@ public class EndingController {
     private CombinedService combinedService;
     
     @GetMapping("/group")
-    public Response<GroupDto> getGroupDetails() {
+    public Response<GroupDateDto> getGroupDetails() {
         return new Response<>(true, 0, null, combinedService.getGroupDetails());
     }
     

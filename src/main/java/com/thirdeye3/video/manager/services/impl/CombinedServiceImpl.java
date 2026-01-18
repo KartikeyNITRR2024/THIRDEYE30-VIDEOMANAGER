@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.thirdeye3.video.manager.dtos.CombinedDto;
 import com.thirdeye3.video.manager.dtos.EndingDto;
+import com.thirdeye3.video.manager.dtos.GroupDateDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
 import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
@@ -110,7 +111,7 @@ public class CombinedServiceImpl implements CombinedService {
 	}
 	
 	@Override
-	public GroupDto getGroupDetails() {
+	public GroupDateDto getGroupDetails() {
 		EndingDto endingDto = endingService.getEnding();
 		UUID uuid = endingDto.getVideoId();
 		if(uuid == null)
@@ -128,7 +129,8 @@ public class CombinedServiceImpl implements CombinedService {
 			logger.error("Group details not found with id: {}", uuid);
             throw new ResourceNotFoundException("Group details not found with ID: " + uuid);
 		}
-		return groupDto;
+		GroupDateDto groupDateDto = new GroupDateDto(groupDto, videoDto.getVideoDate());
+		return groupDateDto;
 	}
 
 	@Override
