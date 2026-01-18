@@ -43,6 +43,15 @@ public class Video {
 
     @Column(name = "group_id")
     private Long group;
+    
+    @Column(name = "is_group_present")
+    private Boolean isGroupPresent;
+
+    @Column(name = "is_ad_present")
+    private Boolean isAdPresent;
+
+    @Column(name = "ad_id")
+    private Long adId;
 
     @PrePersist
     protected void onCreate() {

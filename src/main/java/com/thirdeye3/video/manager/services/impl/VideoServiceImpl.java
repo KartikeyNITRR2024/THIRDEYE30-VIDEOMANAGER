@@ -47,7 +47,23 @@ public class VideoServiceImpl implements VideoService {
         video.setNote(videoDto.getNote());
         video.setCompleted(videoDto.getCompleted());
         video.setGroup(groupService.getGroupById(videoDto.getGroupId()).getId());
+        if (videoDto.getGroupId() != null) {
+            Long group = groupService.getGroupById(videoDto.getGroupId()).getId();
+            video.setGroup(group);
+            video.setIsGroupPresent(true);
+        } else {
+            video.setGroup(null);
+            video.setIsGroupPresent(false);
+        }
+        if (videoDto.getAdId() != null) {
+            video.setAdId(videoDto.getAdId());
+            video.setIsAdPresent(true);
+        } else {
+            video.setAdId(null);
+            video.setIsAdPresent(false);
+        }
         Video savedVideo = videoRepository.save(video);
+        
         logger.info("Video created successfully with id: {}", savedVideo.getId());
 
         return mapper.mapToDto(savedVideo);

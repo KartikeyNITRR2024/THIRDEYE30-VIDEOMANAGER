@@ -71,9 +71,10 @@ public class Mapper {
         dto.setVideoDate(entity.getVideoDate());
         dto.setNote(entity.getNote());
         dto.setCompleted(entity.getCompleted());
-        if (entity.getGroup() != null) {
-        	dto.setGroupId(entity.getGroup());
-        }
+        dto.setGroupId(entity.getGroup());
+        dto.setIsGroupPresent(entity.getIsGroupPresent());
+        dto.setIsAdPresent(entity.getIsAdPresent());
+        dto.setAdId(entity.getAdId());
         return dto;
     }
 	
