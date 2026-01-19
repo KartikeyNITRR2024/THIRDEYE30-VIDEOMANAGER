@@ -1,5 +1,6 @@
 package com.thirdeye3.video.manager.services.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.thirdeye3.video.manager.dtos.EndingDto;
 import com.thirdeye3.video.manager.dtos.GroupDateDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
 import com.thirdeye3.video.manager.dtos.NewsDto;
+import com.thirdeye3.video.manager.dtos.StockDataDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import com.thirdeye3.video.manager.services.AdvertainmentService;
@@ -154,6 +156,31 @@ public class CombinedServiceImpl implements CombinedService {
 			throw new ResourceNotFoundException("Uuid not found");
 		}
 		videoService.updateCurrentState(uuid, currentState);
+	}
+	
+	@Override
+	public void createStocksData(List<StockDataDto> dtoList) {
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
+		int count = 0;
+		for(StockDataDto stockDataDto : dtoList)
+		{
+			stockDataDto.setVideoId(uuid);
+			try {
+				stockDataService.createStockData(stockDataDto);
+				count++;
+			} 
+			catch(Exception exception)
+			{
+				logger.info("Falied to add {} ", stockDataDto);
+			}
+		}
+		logger.info("Updated {} out of {} data", count, dtoList.size());
+		
 	}
 
 }

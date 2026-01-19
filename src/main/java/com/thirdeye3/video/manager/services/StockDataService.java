@@ -12,5 +12,4 @@ public interface StockDataService {
     void deleteStockData(Long id);
     List<StockDataDto> getStockDataByVideoId(UUID videoId);
     List<StockDataDto> getStockDataByStockId(Long stockId);
-	void createStocksData(List<StockDataDto> dtoList);
 }

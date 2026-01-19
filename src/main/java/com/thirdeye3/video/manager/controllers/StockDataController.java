@@ -22,12 +22,6 @@ public class StockDataController {
     public Response<StockDataDto> createStockData(@RequestBody StockDataDto dto) {
         return new Response<>(true, 0, null, stockDataService.createStockData(dto));
     }
-    
-    @PostMapping("/list")
-    public Response<Void> createStocksData(@RequestBody List<StockDataDto> dtoList) {
-    	stockDataService.createStocksData(dtoList);
-        return new Response<>(true, 0, null, null);
-    }
 
     @GetMapping("/{id}")
     public Response<StockDataDto> getStockDataById(@PathVariable Long id) {

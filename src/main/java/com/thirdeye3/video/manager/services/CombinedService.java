@@ -1,10 +1,12 @@
 package com.thirdeye3.video.manager.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.thirdeye3.video.manager.dtos.CombinedDto;
 import com.thirdeye3.video.manager.dtos.GroupDateDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
+import com.thirdeye3.video.manager.dtos.StockDataDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
 
 public interface CombinedService {
@@ -12,4 +14,5 @@ public interface CombinedService {
 	GroupDateDto getGroupDetails();
 	void updateCompleted(Boolean completed);
 	void updateCurrentState(Integer currentState);
+	void createStocksData(List<StockDataDto> dtoList);
 }

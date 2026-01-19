@@ -166,22 +166,4 @@ public class StockDataServiceImpl implements StockDataService {
         logger.info("Total StockData records found for stockId {}: {}", stockId, list.size());
         return list;
     }
-
-	@Override
-	public void createStocksData(List<StockDataDto> dtoList) {
-		int count = 0;
-		for(StockDataDto stockDataDto : dtoList)
-		{
-			try {
-				createStockData(stockDataDto);
-				count++;
-			} 
-			catch(Exception exception)
-			{
-				logger.info("Falied to add {} ", stockDataDto);
-			}
-		}
-		logger.info("Updated {} out of {} data", count, dtoList.size());
-		
-	}
 }

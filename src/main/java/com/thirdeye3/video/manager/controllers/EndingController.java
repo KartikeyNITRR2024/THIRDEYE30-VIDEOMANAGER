@@ -42,9 +42,9 @@ public class EndingController {
         return new Response<>(true, 0, null, combinedService.getVideoandActiveResources());
     }
     
-    @PostMapping
+    @PostMapping("/group")
     public Response<Void> createStocksData(@RequestBody List<StockDataDto> dtoList) {
-    	stockDataService.createStocksData(dtoList);
+    	combinedService.createStocksData(dtoList);
         return new Response<>(true, 0, null, null);
     }
     
