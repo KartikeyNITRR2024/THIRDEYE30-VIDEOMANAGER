@@ -144,6 +144,7 @@ public class StockDataServiceImpl implements StockDataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StockDataDto> getStockDataByVideoId(UUID videoId) {
         logger.info("Fetching StockData by videoId: {}", videoId);
 
@@ -156,6 +157,7 @@ public class StockDataServiceImpl implements StockDataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StockDataDto> getStockDataByStockId(Long stockId) {
         logger.info("Fetching StockData by stockId: {}", stockId);
 
