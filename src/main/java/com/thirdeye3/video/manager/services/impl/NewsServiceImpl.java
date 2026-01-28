@@ -148,6 +148,7 @@ public class NewsServiceImpl implements NewsService {
         return pendingNews;
     }
     
+    @Override
     public void linkAudioToNews(Long newsId, FileMetadata file) {
         newsRepository.updateSoundStatusAndFile(newsId, true, file);
     }

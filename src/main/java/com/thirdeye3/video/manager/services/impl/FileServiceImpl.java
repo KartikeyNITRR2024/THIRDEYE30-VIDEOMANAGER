@@ -11,6 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.thirdeye3.video.manager.dtos.FileResponseDto;
 import com.thirdeye3.video.manager.dtos.FileUploadDto;
+import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.entities.FileMetadata;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import com.thirdeye3.video.manager.repositories.FileRepository;
@@ -107,6 +108,7 @@ public class FileServiceImpl implements FileService {
     
     @Override
 	public FileResponseDto uploadAudioFile(Long newsId, FileUploadDto uploadDto) {
+    	NewsDto newsDto = newsService.getNewsById(newsId);
     	log.info("File upload request received | name={} | size={} | type={}",
                 uploadDto.getName(),
                 uploadDto.getFile().getSize(),
@@ -124,10 +126,8 @@ public class FileServiceImpl implements FileService {
 
             log.info("Detected file extension: {}", extension);
 
-            String folderName = "default";
-            if (uploadDto.getName() != null && !uploadDto.getName().trim().isEmpty()) {
-                folderName = uploadDto.getName().trim().replaceAll("[^a-zA-Z0-9\\-_]", "_");
-            }
+            String newsName = newsDto.getVideoId().toString()+"/"+newsId.toString();
+            String folderName = newsName.replaceAll("[^a-zA-Z0-9\\-_]", "_");
 
             log.info("Resolved S3 folder name: {}", folderName);
 
