@@ -324,7 +324,7 @@ public class Mapper {
         dto.setIsImagePresent(entity.getIsImagePresent());
         dto.setImageUrl(entity.getImageUrl());
         dto.setIsSoundPresent(entity.getIsSoundPresent());
-        dto.setContent(entity.getAudioContent());
+        dto.setAudioContent(entity.getAudioContent());
         dto.setIsSoundCreated(entity.getIsSoundCreated());
         if (entity.getFile() != null) {
             dto.setFile(entity.getFile().getId());
@@ -347,7 +347,7 @@ public class Mapper {
         entity.setIsImagePresent(dto.getIsImagePresent());
         entity.setImageUrl(dto.getImageUrl());
         entity.setIsSoundPresent(dto.getIsSoundPresent());
-        entity.setContent(dto.getAudioContent());
+        entity.setAudioContent(dto.getAudioContent());
         entity.setIsSoundCreated(dto.getIsSoundCreated());
         if (dto.getIsSoundCreated() != null) {
             dto.setFile(entity.getFile().getId());
