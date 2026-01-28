@@ -96,6 +96,9 @@ public class NewsServiceImpl implements NewsService {
         news.setContent(newsDto.getContent());
         news.setIsImagePresent(newsDto.getIsImagePresent());
         news.setImageUrl(newsDto.getImageUrl());
+        news.setIsSoundPresent(newsDto.getIsSoundPresent());
+        news.setAudioContent(newsDto.getAudioContent());
+        news.setIsSoundCreated(newsDto.getIsSoundCreated());
 
         if (newsDto.getVideoId() != null) {
             logger.info("Updating video link for News id: {} with videoId: {}", id, newsDto.getVideoId());
