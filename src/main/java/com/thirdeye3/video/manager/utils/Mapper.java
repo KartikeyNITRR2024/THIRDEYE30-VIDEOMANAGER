@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 import com.thirdeye3.video.manager.dtos.AdvertainmentDto;
 import com.thirdeye3.video.manager.dtos.EndingDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
+import com.thirdeye3.video.manager.dtos.FileResponseDto;
 import com.thirdeye3.video.manager.dtos.IntroVideoDto;
 import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.dtos.OutroVideoDto;
@@ -15,6 +16,7 @@ import com.thirdeye3.video.manager.dtos.VideoSettingDto;
 import com.thirdeye3.video.manager.entities.Advertainment;
 import com.thirdeye3.video.manager.entities.Ending;
 import com.thirdeye3.video.manager.entities.Group;
+import com.thirdeye3.video.manager.entities.FileMetadata;
 import com.thirdeye3.video.manager.entities.IntroVideo;
 import com.thirdeye3.video.manager.entities.News;
 import com.thirdeye3.video.manager.entities.OutroVideo;
@@ -23,6 +25,11 @@ import com.thirdeye3.video.manager.entities.StockData;
 import com.thirdeye3.video.manager.entities.Video;
 import com.thirdeye3.video.manager.entities.VideoDetails;
 import com.thirdeye3.video.manager.entities.VideoSetting;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 
 public class Mapper {
 	
@@ -316,6 +323,13 @@ public class Mapper {
         dto.setContent(entity.getContent());
         dto.setIsImagePresent(entity.getIsImagePresent());
         dto.setImageUrl(entity.getImageUrl());
+        dto.setIsSoundPresent(entity.getIsSoundPresent());
+        dto.setContent(entity.getAudioContent());
+        dto.setIsSoundCreated(entity.getIsSoundCreated());
+        if (entity.getFile() != null) {
+            dto.setFile(entity.getFile().getId());
+        }
+        
         if (entity.getVideo() != null) {
             dto.setVideoId(entity.getVideo().getId());
         }
@@ -332,6 +346,15 @@ public class Mapper {
         entity.setContent(dto.getContent());
         entity.setIsImagePresent(dto.getIsImagePresent());
         entity.setImageUrl(dto.getImageUrl());
+        entity.setIsSoundPresent(dto.getIsSoundPresent());
+        entity.setContent(dto.getAudioContent());
+        entity.setIsSoundCreated(dto.getIsSoundCreated());
+        if (dto.getIsSoundCreated() != null) {
+            dto.setFile(entity.getFile().getId());
+        }
+        if (entity.getVideo() != null) {
+            dto.setVideoId(entity.getVideo().getId());
+        }
         return entity;
     }
     
@@ -398,5 +421,14 @@ public class Mapper {
             dto.setVideoId(entity.getVideo().getId());
         }
         return dto;
+    }
+    
+    public FileResponseDto toDto(FileMetadata entity, String accessUrl) {
+        return FileResponseDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .url(accessUrl)
+                .build();
     }
 }

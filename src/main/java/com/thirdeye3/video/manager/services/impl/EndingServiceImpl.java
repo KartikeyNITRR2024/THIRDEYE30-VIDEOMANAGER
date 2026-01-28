@@ -1,6 +1,7 @@
 package com.thirdeye3.video.manager.services.impl;
 
 import com.thirdeye3.video.manager.dtos.EndingDto;
+import com.thirdeye3.video.manager.dtos.FileUploadDto;
 import com.thirdeye3.video.manager.entities.Ending;
 import com.thirdeye3.video.manager.entities.Video;
 import com.thirdeye3.video.manager.repositories.EndingRepository;

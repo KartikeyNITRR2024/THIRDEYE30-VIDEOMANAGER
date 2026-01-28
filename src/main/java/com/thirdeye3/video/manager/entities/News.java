@@ -5,8 +5,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "news")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter 
+@Setter
+@NoArgsConstructor 
+@AllArgsConstructor
 @Builder
 public class News {
 
@@ -18,8 +20,7 @@ public class News {
     @Column(nullable = false)
     private String header;
 
-    @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "content")
     private String content;
 
     @Column(name = "is_image_present")
@@ -27,6 +28,19 @@ public class News {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "is_sound_present")
+    private Boolean isSoundPresent;
+
+    @Column(name = "audio_content")
+    private String audioContent;
+
+    @Column(name = "is_sound_created")
+    private Boolean isSoundCreated;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private FileMetadata file;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_id")

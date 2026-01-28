@@ -7,18 +7,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.thirdeye3.video.manager.dtos.CombinedDto;
 import com.thirdeye3.video.manager.dtos.EndingDto;
+import com.thirdeye3.video.manager.dtos.FileUploadDto;
 import com.thirdeye3.video.manager.dtos.GroupDateDto;
 import com.thirdeye3.video.manager.dtos.GroupDto;
 import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.dtos.StockDataDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
+import com.thirdeye3.video.manager.entities.News;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import com.thirdeye3.video.manager.services.AdvertainmentService;
 import com.thirdeye3.video.manager.services.CombinedService;
 import com.thirdeye3.video.manager.services.EndingService;
+import com.thirdeye3.video.manager.services.FileService;
 import com.thirdeye3.video.manager.services.GroupService;
 import com.thirdeye3.video.manager.services.IntroVideoService;
 import com.thirdeye3.video.manager.services.NewsService;
@@ -60,6 +64,9 @@ public class CombinedServiceImpl implements CombinedService {
 	
 	@Autowired
 	private EndingService endingService;
+	
+	@Autowired
+	private FileService fileService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CombinedServiceImpl.class);
 	
@@ -180,7 +187,25 @@ public class CombinedServiceImpl implements CombinedService {
 			}
 		}
 		logger.info("Updated {} out of {} data", count, dtoList.size());
-		
 	}
+	
+	@Override
+	public List<NewsDto> getNewsForSoundGeneration()
+	{
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
+		return newsService.getNewsByVideoId(uuid);
+	}
+	
+    @Override
+    @Transactional
+    public void addSound(Long newsId, FileUploadDto uploadDto)
+    {
+    	fileService.uploadFile(uploadDto);
+    }
 
 }

@@ -41,6 +41,7 @@ public class VideoSettingServiceImpl implements VideoSettingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public VideoSettingDto getVideoSettingById(Long id) {
         logger.info("Fetching VideoSetting with id: {}", id);
         VideoSetting setting = videoSettingRepository.findById(id)
@@ -52,6 +53,7 @@ public class VideoSettingServiceImpl implements VideoSettingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<VideoSettingDto> getAllVideoSettings() {
         logger.info("Fetching all VideoSettings ordered by active and lastlyUsed");
         List<VideoSettingDto> settings = videoSettingRepository.findAllByOrderByActiveDescLastlyUsedDesc().stream()
@@ -108,6 +110,7 @@ public class VideoSettingServiceImpl implements VideoSettingService {
     }
     
     @Override
+    @Transactional(readOnly = true)
     public VideoSettingDto getActiveVideoSetting() {
         VideoSetting setting = videoSettingRepository.findFirstByActiveTrue()
                 .orElseThrow(() -> {
