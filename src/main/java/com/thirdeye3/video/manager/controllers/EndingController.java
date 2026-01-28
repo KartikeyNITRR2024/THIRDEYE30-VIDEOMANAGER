@@ -10,6 +10,7 @@ import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.dtos.Response;
 import com.thirdeye3.video.manager.dtos.StockDataDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
+import com.thirdeye3.video.manager.projections.NewsAudioProjection;
 import com.thirdeye3.video.manager.services.CombinedService;
 import com.thirdeye3.video.manager.services.EndingService;
 import com.thirdeye3.video.manager.services.FileService;
@@ -68,13 +69,13 @@ public class EndingController {
     }
     
     @GetMapping("/news")
-    public Response<List<NewsDto>> getNews() {
+    public Response<List<NewsAudioProjection>> getNews() {
         return new Response<>(true, 0, null, combinedService.getNewsForSoundGeneration());
     }
     
     @PostMapping(value = "/news/sound/{newsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<FileResponseDto> uploadFile(@PathVariable Long newsId, @ModelAttribute FileUploadDto uploadDto) {
-        return new Response<>(true, 0, null, fileService.uploadFile(uploadDto));
+        return new Response<>(true, 0, null, fileService.uploadAudioFile(newsId, uploadDto));
     }
     
     

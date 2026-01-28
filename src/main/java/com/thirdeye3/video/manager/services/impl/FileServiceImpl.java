@@ -15,6 +15,8 @@ import com.thirdeye3.video.manager.entities.FileMetadata;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import com.thirdeye3.video.manager.repositories.FileRepository;
 import com.thirdeye3.video.manager.services.FileService;
+import com.thirdeye3.video.manager.services.NewsService;
+import com.thirdeye3.video.manager.services.VideoService;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -35,6 +37,9 @@ public class FileServiceImpl implements FileService {
     
     @Value("${thirdeye.files.url.starter}") 
     private String urlStarter;
+    
+    @Autowired
+    private NewsService newsService;
 
     @Override
     public FileResponseDto uploadFile(FileUploadDto uploadDto) {
@@ -99,6 +104,71 @@ public class FileServiceImpl implements FileService {
             throw new ResourceNotFoundException("Unexpected error occurred while uploading file");
         }
     }
+    
+    @Override
+	public FileResponseDto uploadAudioFile(Long newsId, FileUploadDto uploadDto) {
+    	log.info("File upload request received | name={} | size={} | type={}",
+                uploadDto.getName(),
+                uploadDto.getFile().getSize(),
+                uploadDto.getFile().getContentType());
+
+        try {
+            String originalName = uploadDto.getFile().getOriginalFilename();
+            String extension = "";
+
+            log.info("Original filename: {}", originalName);
+
+            if (originalName != null && originalName.contains(".")) {
+                extension = originalName.substring(originalName.lastIndexOf("."));
+            }
+
+            log.info("Detected file extension: {}", extension);
+
+            String folderName = "default";
+            if (uploadDto.getName() != null && !uploadDto.getName().trim().isEmpty()) {
+                folderName = uploadDto.getName().trim().replaceAll("[^a-zA-Z0-9\\-_]", "_");
+            }
+
+            log.info("Resolved S3 folder name: {}", folderName);
+
+            String s3Key = folderName + "/" + UUID.randomUUID().toString() + extension;
+
+            log.info("Generated S3 key: {}", s3Key);
+
+            s3Template.upload(bucketName, s3Key, uploadDto.getFile().getInputStream());
+
+            log.info("File successfully uploaded to S3 | bucket={} | key={}", bucketName, s3Key);
+
+            FileMetadata metadata = FileMetadata.builder()
+                    .name(uploadDto.getName())
+                    .description(uploadDto.getDescription())
+                    .s3Key(s3Key)
+                    .fileType(uploadDto.getFile().getContentType())
+                    .size(uploadDto.getFile().getSize())
+                    .build();
+
+            FileMetadata savedEntity = fileRepository.save(metadata);
+            newsService.linkAudioToNews(newsId, savedEntity);
+
+            log.info("File metadata saved successfully | id={} | key={}", 
+                    savedEntity.getId(), savedEntity.getS3Key());
+
+            FileResponseDto response = mapToDto(savedEntity);
+
+            log.info("File upload process completed | id={} | url={}", 
+                    response.getId(), response.getUrl());
+
+            return response;
+
+        } catch (IOException e) {
+            log.error("File upload failed due to IO error | name={}", uploadDto.getName(), e);
+            throw new ResourceNotFoundException("Failed to upload file");
+        } catch (Exception e) {
+            log.error("File upload failed due to unexpected error | name={}", uploadDto.getName(), e);
+            throw new ResourceNotFoundException("Unexpected error occurred while uploading file");
+        }
+    	
+	}
 
     @Override
     public Resource downloadFile(String s3Key) {
@@ -147,4 +217,6 @@ public class FileServiceImpl implements FileService {
 
         return dto;
     }
+
+	
 }

@@ -1,6 +1,7 @@
 package com.thirdeye3.video.manager.services.impl;
 
 import com.thirdeye3.video.manager.dtos.NewsDto;
+import com.thirdeye3.video.manager.entities.FileMetadata;
 import com.thirdeye3.video.manager.entities.News;
 import com.thirdeye3.video.manager.entities.Video;
 import com.thirdeye3.video.manager.repositories.NewsRepository;
@@ -8,6 +9,7 @@ import com.thirdeye3.video.manager.repositories.VideoRepository;
 import com.thirdeye3.video.manager.services.NewsService;
 import com.thirdeye3.video.manager.utils.Mapper;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
+import com.thirdeye3.video.manager.projections.NewsAudioProjection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,5 +137,18 @@ public class NewsServiceImpl implements NewsService {
 
         logger.info("Total News found for videoId {}: {}", videoId, list.size());
         return list;
+    }
+    
+    @Override
+    public List<NewsAudioProjection> pendingNewsToGenerateSound(UUID videoId)
+    {
+    	logger.info("Fetching Pending News by videoId: {}", videoId);
+    	List<NewsAudioProjection> pendingNews = newsRepository.findPendingAudioByVideoId(videoId);
+        logger.info("Total pending News found for videoId {}: {}", videoId, pendingNews.size());
+        return pendingNews;
+    }
+    
+    public void linkAudioToNews(Long newsId, FileMetadata file) {
+        newsRepository.updateSoundStatusAndFile(newsId, true, file);
     }
 }

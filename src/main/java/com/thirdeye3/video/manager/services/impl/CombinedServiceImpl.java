@@ -19,6 +19,7 @@ import com.thirdeye3.video.manager.dtos.StockDataDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
 import com.thirdeye3.video.manager.entities.News;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
+import com.thirdeye3.video.manager.projections.NewsAudioProjection;
 import com.thirdeye3.video.manager.services.AdvertainmentService;
 import com.thirdeye3.video.manager.services.CombinedService;
 import com.thirdeye3.video.manager.services.EndingService;
@@ -190,7 +191,7 @@ public class CombinedServiceImpl implements CombinedService {
 	}
 	
 	@Override
-	public List<NewsDto> getNewsForSoundGeneration()
+	public List<NewsAudioProjection> getNewsForSoundGeneration()
 	{
 		EndingDto endingDto = endingService.getEnding();
 		UUID uuid = endingDto.getVideoId();
@@ -198,7 +199,7 @@ public class CombinedServiceImpl implements CombinedService {
 		{
 			throw new ResourceNotFoundException("Uuid not found");
 		}
-		return newsService.getNewsByVideoId(uuid);
+		return newsService.pendingNewsToGenerateSound(uuid);
 	}
 	
     @Override

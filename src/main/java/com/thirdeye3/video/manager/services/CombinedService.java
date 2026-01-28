@@ -11,6 +11,7 @@ import com.thirdeye3.video.manager.dtos.NewsDto;
 import com.thirdeye3.video.manager.dtos.StockDataDto;
 import com.thirdeye3.video.manager.dtos.VideoDto;
 import com.thirdeye3.video.manager.entities.News;
+import com.thirdeye3.video.manager.projections.NewsAudioProjection;
 
 public interface CombinedService {
 	CombinedDto getVideoandActiveResources();
@@ -18,6 +19,6 @@ public interface CombinedService {
 	void updateCompleted(Boolean completed);
 	void updateCurrentState(Integer currentState);
 	void createStocksData(List<StockDataDto> dtoList);
-	List<NewsDto> getNewsForSoundGeneration();
+	List<NewsAudioProjection> getNewsForSoundGeneration();
 	void addSound(Long newsId, FileUploadDto uploadDto);
 }
