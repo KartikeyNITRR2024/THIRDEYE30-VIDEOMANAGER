@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,20 +54,6 @@ public class EndingController {
     @GetMapping("/combined")
     public Response<CombinedDto> getCombinedDetails() {
         return new Response<>(true, 0, null, combinedService.getVideoandActiveResources());
-    }
-    
-    @GetMapping("/view/{s3Key}")
-    public ResponseEntity<Resource> viewImage(@PathVariable String s3Key) {
-        Resource resource = fileService.downloadFile(s3Key);
-        
-        String contentType = "application/octet-stream";
-        try {
-            contentType = URLConnection.guessContentTypeFromName(s3Key);
-        } catch (Exception ignored) {}
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(resource);
     }
     
     @GetMapping("/news")

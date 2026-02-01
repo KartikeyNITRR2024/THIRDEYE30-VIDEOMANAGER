@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class VideoSettingServiceImpl implements VideoSettingService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public VideoSettingDto createVideoSetting(VideoSettingDto dto) {
         logger.info("Creating VideoSetting with name: {}", dto.getSettingName());
         VideoSetting setting = mapper.mapDtoToEntity(dto);
@@ -65,6 +67,7 @@ public class VideoSettingServiceImpl implements VideoSettingService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public VideoSettingDto updateVideoSetting(Long id, VideoSettingDto dto) {
         logger.info("Updating VideoSetting with id: {}", id);
         VideoSetting setting = videoSettingRepository.findById(id)
@@ -81,6 +84,8 @@ public class VideoSettingServiceImpl implements VideoSettingService {
     }
 
     @Override
+    @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteVideoSetting(Long id) {
         logger.info("Deleting VideoSetting with id: {}", id);
         videoSettingRepository.deleteById(id);
@@ -89,6 +94,7 @@ public class VideoSettingServiceImpl implements VideoSettingService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public VideoSettingDto updateActive(Long id) {
         logger.info("Deactivating all VideoSettings");
         videoSettingRepository.deactivateAll();
@@ -120,5 +126,4 @@ public class VideoSettingServiceImpl implements VideoSettingService {
 
         return mapper.mapToDto(setting);
     }
-
 }

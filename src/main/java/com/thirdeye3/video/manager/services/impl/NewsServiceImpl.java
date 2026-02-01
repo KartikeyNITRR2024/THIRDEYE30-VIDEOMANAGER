@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public NewsDto createNews(NewsDto newsDto) {
         logger.info("Creating News with header: {}", newsDto.getHeader());
 
@@ -85,6 +87,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public NewsDto updateNews(Long id, NewsDto newsDto) {
         logger.info("Updating News with id: {}", id);
 
@@ -122,6 +125,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteNews(Long id) {
         logger.info("Deleting News with id: {}", id);
         newsRepository.deleteById(id);
@@ -140,15 +144,16 @@ public class NewsServiceImpl implements NewsService {
     }
     
     @Override
-    public List<NewsAudioProjection> pendingNewsToGenerateSound(UUID videoId)
-    {
-    	logger.info("Fetching Pending News by videoId: {}", videoId);
-    	List<NewsAudioProjection> pendingNews = newsRepository.findPendingAudioByVideoId(videoId);
+    public List<NewsAudioProjection> pendingNewsToGenerateSound(UUID videoId) {
+        logger.info("Fetching Pending News by videoId: {}", videoId);
+        List<NewsAudioProjection> pendingNews = newsRepository.findPendingAudioByVideoId(videoId);
         logger.info("Total pending News found for videoId {}: {}", videoId, pendingNews.size());
         return pendingNews;
     }
     
     @Override
+    @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void linkAudioToNews(Long newsId, FileMetadata file) {
         newsRepository.updateSoundStatusAndFile(newsId, true, file);
     }

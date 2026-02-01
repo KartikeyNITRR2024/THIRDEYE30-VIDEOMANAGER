@@ -15,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,9 @@ public class StockDataServiceImpl implements StockDataService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "video_stock_data", key = "#dto.videoId")
+    })
     public StockDataDto createStockData(StockDataDto dto) {
         logger.info("Creating StockData entry");
 
@@ -99,6 +105,9 @@ public class StockDataServiceImpl implements StockDataService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "video_stock_data", allEntries = true)
+    })
     public StockDataDto updateStockData(Long id, StockDataDto dto) {
         logger.info("Updating StockData with id: {}", id);
 
@@ -137,6 +146,9 @@ public class StockDataServiceImpl implements StockDataService {
     }
 
     @Override
+    @Caching(evict = {
+        @CacheEvict(value = "video_stock_data", allEntries = true)
+    })
     public void deleteStockData(Long id) {
         logger.info("Deleting StockData with id: {}", id);
         stockDataRepository.deleteById(id);
@@ -145,8 +157,9 @@ public class StockDataServiceImpl implements StockDataService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "video_stock_data", key = "#videoId")
     public List<StockDataDto> getStockDataByVideoId(UUID videoId) {
-        logger.info("Fetching StockData by videoId: {}", videoId);
+        logger.info("Fetching StockData by videoId (Cache Miss): {}", videoId);
 
         List<StockDataDto> list = stockDataRepository.findByVideo_Id(videoId).stream()
                 .map(mapper::mapToDto)

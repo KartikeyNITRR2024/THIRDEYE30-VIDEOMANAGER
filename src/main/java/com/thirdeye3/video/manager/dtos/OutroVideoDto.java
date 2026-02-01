@@ -1,10 +1,12 @@
 package com.thirdeye3.video.manager.dtos;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class OutroVideoDto {
+public class OutroVideoDto implements Serializable {
     private Long outroId;
     private String outroName;
     private Boolean isBackgroundImage;

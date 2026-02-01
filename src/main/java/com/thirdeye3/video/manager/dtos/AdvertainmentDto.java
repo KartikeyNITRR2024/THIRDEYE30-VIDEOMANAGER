@@ -1,10 +1,12 @@
 package com.thirdeye3.video.manager.dtos;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class AdvertainmentDto {
+public class AdvertainmentDto implements Serializable {
     private Long adId;
     private String adName;
     private String adCompanyName;

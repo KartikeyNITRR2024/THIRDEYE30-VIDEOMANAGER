@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
@@ -30,6 +31,7 @@ public class IntroVideoServiceImpl implements IntroVideoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public IntroVideoDto createIntroVideo(IntroVideoDto dto) {
         logger.info("Creating IntroVideo with name: {}", dto.getIntroName());
         IntroVideo intro = mapper.mapDtoToEntity(dto);
@@ -66,6 +68,7 @@ public class IntroVideoServiceImpl implements IntroVideoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public IntroVideoDto updateIntroVideo(Long id, IntroVideoDto dto) {
         logger.info("Updating IntroVideo with id: {}", id);
 
@@ -84,6 +87,7 @@ public class IntroVideoServiceImpl implements IntroVideoService {
     }
 
     @Override
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteIntroVideo(Long id) {
         logger.info("Deleting IntroVideo with id: {}", id);
         introVideoRepository.deleteById(id);
@@ -92,6 +96,7 @@ public class IntroVideoServiceImpl implements IntroVideoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public IntroVideoDto updateActive(Long id) {
         logger.info("Deactivating all IntroVideos");
         introVideoRepository.deactivateAll();
@@ -122,4 +127,3 @@ public class IntroVideoServiceImpl implements IntroVideoService {
         return mapper.mapToDto(intro);
     }
 }
-

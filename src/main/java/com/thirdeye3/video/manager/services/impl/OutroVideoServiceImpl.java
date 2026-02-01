@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class OutroVideoServiceImpl implements OutroVideoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public OutroVideoDto createOutroVideo(OutroVideoDto dto) {
         logger.info("Creating OutroVideo");
         OutroVideo entity = mapper.mapDtoToEntity(dto);
@@ -66,6 +68,7 @@ public class OutroVideoServiceImpl implements OutroVideoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public OutroVideoDto updateOutroVideo(Long id, OutroVideoDto dto) {
         logger.info("Updating OutroVideo with id: {}", id);
 
@@ -84,6 +87,7 @@ public class OutroVideoServiceImpl implements OutroVideoService {
     }
 
     @Override
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteOutroVideo(Long id) {
         logger.info("Deleting OutroVideo with id: {}", id);
         outroVideoRepository.deleteById(id);
@@ -92,6 +96,7 @@ public class OutroVideoServiceImpl implements OutroVideoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public OutroVideoDto updateActive(Long id) {
         logger.info("Deactivating all OutroVideos");
         outroVideoRepository.deactivateAll();
@@ -122,4 +127,3 @@ public class OutroVideoServiceImpl implements OutroVideoService {
         return mapper.mapToDto(entity);
     }
 }
-

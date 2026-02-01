@@ -1,11 +1,12 @@
 package com.thirdeye3.video.manager.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class CombinedDto {
+public class CombinedDto implements Serializable {
    private VideoDto videoDto;
    private VideoSettingDto videoSettingDto;
    private AdvertainmentDto advertainmentDto;

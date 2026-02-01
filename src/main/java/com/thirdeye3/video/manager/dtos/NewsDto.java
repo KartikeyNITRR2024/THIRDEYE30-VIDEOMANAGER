@@ -1,5 +1,6 @@
 package com.thirdeye3.video.manager.dtos;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.thirdeye3.video.manager.entities.FileMetadata;
@@ -13,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
-public class NewsDto {
+public class NewsDto implements Serializable {
     private Long newsId;
     private UUID videoId;
     private String header;

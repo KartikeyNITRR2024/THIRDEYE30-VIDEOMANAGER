@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.core.io.ByteArrayResource;
 
 import com.thirdeye3.video.manager.dtos.FileResponseDto;
 import com.thirdeye3.video.manager.dtos.FileUploadDto;
@@ -18,6 +19,8 @@ import com.thirdeye3.video.manager.repositories.FileRepository;
 import com.thirdeye3.video.manager.services.FileService;
 import com.thirdeye3.video.manager.services.NewsService;
 import com.thirdeye3.video.manager.services.VideoService;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -177,8 +180,24 @@ public class FileServiceImpl implements FileService {
         log.info("Download successful | key={}", s3Key);
         return resource;
     }
+    
+    @Override
+    @Cacheable(value = "fileContentv1", key = "#s3Key")
+    public byte[] downloadFileContent(String s3Key) {
+        log.info("Downloading file content from S3 (Cache Miss) | key={}", s3Key);
+        try {
+            Resource s3Resource = s3Template.download(bucketName, s3Key);
+            byte[] content = StreamUtils.copyToByteArray(s3Resource.getInputStream());
+            log.info("Download & Serialization successful | Size: {} bytes", content.length);
+            return content;
+        } catch (IOException e) {
+            log.error("Error reading file stream", e);
+            throw new ResourceNotFoundException("Failed to download file content");
+        }
+    }
 
     @Override
+    @Cacheable(value = "fileMetadata", key = "#s3Key")
     public FileResponseDto getFileDetails(String s3Key) {
         log.info("Fetching file details | key={}", s3Key);
 

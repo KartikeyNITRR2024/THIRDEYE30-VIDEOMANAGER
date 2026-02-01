@@ -1,6 +1,7 @@
 package com.thirdeye3.video.manager.dtos;
 
 import lombok.AllArgsConstructor;
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileResponseDto {
+public class FileResponseDto implements Serializable {
     private Long id;
     private String name;
     private String description;

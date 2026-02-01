@@ -1,10 +1,12 @@
 package com.thirdeye3.video.manager.dtos;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class IntroVideoDto {
+public class IntroVideoDto implements Serializable {
     private Long introId;
     private String introName;
     private String backgroundImage;

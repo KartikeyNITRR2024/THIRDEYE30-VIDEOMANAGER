@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class AdvertainmentServiceImpl implements AdvertainmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public AdvertainmentDto createAdvertainment(AdvertainmentDto dto) {
         logger.info("Creating Advertainment");
         Advertainment entity = mapper.mapDtoToEntity(dto);
@@ -66,6 +68,7 @@ public class AdvertainmentServiceImpl implements AdvertainmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public AdvertainmentDto updateAdvertainment(Long id, AdvertainmentDto dto) {
         logger.info("Updating Advertainment with id: {}", id);
 
@@ -84,6 +87,7 @@ public class AdvertainmentServiceImpl implements AdvertainmentService {
     }
 
     @Override
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteAdvertainment(Long id) {
         logger.info("Deleting Advertainment with id: {}", id);
         advertainmentRepository.deleteById(id);
@@ -92,6 +96,7 @@ public class AdvertainmentServiceImpl implements AdvertainmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public AdvertainmentDto updateActive(Long id) {
         logger.info("Deactivating all Advertainments");
         advertainmentRepository.deactivateAll();
@@ -122,4 +127,3 @@ public class AdvertainmentServiceImpl implements AdvertainmentService {
         return mapper.mapToDto(entity);
     }
 }
-

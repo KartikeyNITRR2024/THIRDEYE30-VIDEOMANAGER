@@ -1,11 +1,13 @@
 package com.thirdeye3.video.manager.dtos;
 
 import lombok.Data;
+
 import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-public class VideoDto {
+public class VideoDto implements Serializable {
     private UUID id;
     private String name;
     private LocalDateTime createdDateTime;

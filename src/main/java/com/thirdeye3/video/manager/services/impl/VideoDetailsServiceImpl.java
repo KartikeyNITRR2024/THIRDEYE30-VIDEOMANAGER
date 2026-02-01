@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class VideoDetailsServiceImpl implements VideoDetailsService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public VideoDetailsDto createVideoDetails(VideoDetailsDto dto) {
         logger.info("Creating VideoDetails");
 
@@ -88,6 +90,7 @@ public class VideoDetailsServiceImpl implements VideoDetailsService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public VideoDetailsDto updateVideoDetails(Long id, VideoDetailsDto dto) {
         logger.info("Updating VideoDetails with id: {}", id);
 
@@ -121,6 +124,7 @@ public class VideoDetailsServiceImpl implements VideoDetailsService {
     }
 
     @Override
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteVideoDetails(Long id) {
         logger.info("Deleting VideoDetails with id: {}", id);
         videoDetailsRepository.deleteById(id);
@@ -129,6 +133,7 @@ public class VideoDetailsServiceImpl implements VideoDetailsService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public VideoDetailsDto updateActive(Long id) {
         logger.info("Deactivating all VideoDetails");
         videoDetailsRepository.deactivateAll();
@@ -171,4 +176,3 @@ public class VideoDetailsServiceImpl implements VideoDetailsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Video details not found for ID: " + videoId));
     }
 }
-

@@ -1,6 +1,7 @@
 package com.thirdeye3.video.manager.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,10 @@ public class FileController {
     @GetMapping("/view")
     public ResponseEntity<Resource> viewFile(@RequestParam("key") String s3Key) {
         FileResponseDto metadata = fileService.getFileDetails(s3Key);
-        Resource resource = fileService.downloadFile(s3Key);
+        //Resource resource = fileService.downloadFile(s3Key);
+        
+        byte[] fileData = fileService.downloadFileContent(s3Key);
+        ByteArrayResource resource = new ByteArrayResource(fileData);
         
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(metadata.getFileType()))

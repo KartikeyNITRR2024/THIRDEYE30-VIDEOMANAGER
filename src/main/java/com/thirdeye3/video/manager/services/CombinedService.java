@@ -21,4 +21,5 @@ public interface CombinedService {
 	void createStocksData(List<StockDataDto> dtoList);
 	List<NewsAudioProjection> getNewsForSoundGeneration();
 	void addSound(Long newsId, FileUploadDto uploadDto);
+	CombinedDto getCombinedDto(UUID uuid);
 }

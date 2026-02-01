@@ -1,13 +1,15 @@
 package com.thirdeye3.video.manager.dtos;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 
 @Data
-public class VideoSettingDto {
+public class VideoSettingDto implements Serializable {
     private Long settingId;
     private String settingName;
     private Boolean introPresent;

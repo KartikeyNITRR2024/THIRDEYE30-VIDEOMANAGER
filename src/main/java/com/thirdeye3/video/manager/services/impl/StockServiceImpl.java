@@ -12,6 +12,7 @@ import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public StockDto createStock(Long groupId, StockDto stockDto) {
         logger.info("Creating stock under groupId: {}", groupId);
 
@@ -55,6 +57,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public StockDto updateStock(Long stockId, StockDto stockDto) {
         logger.info("Updating stock with id: {}", stockId);
 
@@ -77,6 +80,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "combineddata", allEntries = true)
     public void deleteStock(Long stockId) {
         logger.info("Deleting stock with id: {}", stockId); 
         stockRepository.deleteById(stockId);

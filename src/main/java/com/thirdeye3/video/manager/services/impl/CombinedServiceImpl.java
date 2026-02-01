@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,10 @@ import com.thirdeye3.video.manager.services.VideoSettingService;
 
 @Service
 public class CombinedServiceImpl implements CombinedService {
+	
+	@Autowired
+    @Lazy
+    private CombinedService self;
 
 	@Autowired
 	private VideoService videoService;
@@ -72,22 +78,26 @@ public class CombinedServiceImpl implements CombinedService {
 	private static final Logger logger = LoggerFactory.getLogger(CombinedServiceImpl.class);
 	
 	@Override
-	public CombinedDto getVideoandActiveResources() {
-		EndingDto endingDto = endingService.getEnding();
-		UUID uuid = endingDto.getVideoId();
-		if(uuid == null)
-		{
-			throw new ResourceNotFoundException("Uuid not found");
-		}
+    @Cacheable(value = "combineddata", key = "#uuid")
+	public CombinedDto getCombinedDto(UUID uuid)
+	{
 		CombinedDto combinedDto = new CombinedDto();
+		logger.info("Getting video data");
 		combinedDto.setVideoDto(videoService.getVideoById(uuid));
+		
+		logger.info("Getting video setting data");
 		combinedDto.setVideoSettingDto(videoSettingService.getActiveVideoSetting());
+		
+		logger.info("Getting video details data");
 		combinedDto.setVideoDetailsDto(videoDetailsService.getVideoDetailsByVideoId(uuid));
+		
+		logger.info("Getting news data");
 		combinedDto.setNewsDtoList(newsService.getNewsByVideoId(uuid));
+		
 		if(combinedDto.getVideoDto().getIsGroupPresent())
 		{
+			logger.info("Getting group data");
 			combinedDto.setGroupDto(groupService.getGroupById(combinedDto.getVideoDto().getGroupId()));
-			combinedDto.setStockDataDtoList(stockDataService.getStockDataByVideoId(uuid));
 		}
 		else
 		{
@@ -103,6 +113,7 @@ public class CombinedServiceImpl implements CombinedService {
 		}
 		if(combinedDto.getVideoSettingDto().getIntroPresent())
 		{
+			logger.info("Getting video intro data");
 			combinedDto.setIntroVideoDto(introVideoService.getActiveIntroVideo());
 		}
 		else
@@ -111,11 +122,34 @@ public class CombinedServiceImpl implements CombinedService {
 		}
 		if(combinedDto.getVideoSettingDto().getOutroPresent())
 		{
+			logger.info("Getting outro data");
 			combinedDto.setOutroVideoDto(outroVideoService.getActiveOutroVideo());
 		}
 		else
 		{
 			logger.info("Skipping outro data");
+		}
+		logger.info("Returning all data");
+		return combinedDto;
+	}
+	
+	@Override
+	public CombinedDto getVideoandActiveResources() {
+		EndingDto endingDto = endingService.getEnding();
+		UUID uuid = endingDto.getVideoId();
+		if(uuid == null)
+		{
+			throw new ResourceNotFoundException("Uuid not found");
+		}
+		CombinedDto combinedDto = self.getCombinedDto(uuid);
+		if(combinedDto.getVideoDto().getIsGroupPresent())
+		{	
+			logger.info("Getting stock data");
+			combinedDto.setStockDataDtoList(stockDataService.getStockDataByVideoId(uuid));
+		}
+		else
+		{
+			logger.info("Skipping group details data");
 		}
 		return combinedDto;
 	}
