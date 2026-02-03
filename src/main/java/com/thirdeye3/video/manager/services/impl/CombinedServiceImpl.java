@@ -78,7 +78,7 @@ public class CombinedServiceImpl implements CombinedService {
 	private static final Logger logger = LoggerFactory.getLogger(CombinedServiceImpl.class);
 	
 	@Override
-    @Cacheable(value = "combineddata", key = "#uuid")
+//    @Cacheable(value = "combineddata", key = "#uuid")
 	public CombinedDto getCombinedDto(UUID uuid)
 	{
 		CombinedDto combinedDto = new CombinedDto();
