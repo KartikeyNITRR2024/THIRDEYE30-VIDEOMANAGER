@@ -24,6 +24,7 @@ import com.thirdeye3.video.manager.exceptions.ResourceNotFoundException;
 import com.thirdeye3.video.manager.projections.NewsAudioProjection;
 import com.thirdeye3.video.manager.services.AdvertainmentService;
 import com.thirdeye3.video.manager.services.CombinedService;
+import com.thirdeye3.video.manager.services.ContentAreaService;
 import com.thirdeye3.video.manager.services.EndingService;
 import com.thirdeye3.video.manager.services.FileService;
 import com.thirdeye3.video.manager.services.GroupService;
@@ -75,6 +76,9 @@ public class CombinedServiceImpl implements CombinedService {
 	@Autowired
 	private FileService fileService;
 	
+	@Autowired
+	private ContentAreaService contentAreaService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(CombinedServiceImpl.class);
 	
 	@Override
@@ -119,6 +123,15 @@ public class CombinedServiceImpl implements CombinedService {
 		else
 		{
 			logger.info("Skipping intro data");
+		}
+		if(combinedDto.getVideoSettingDto().getMainVideoPresent())
+		{
+			logger.info("Getting video content data");
+			combinedDto.setContentAreaDto(contentAreaService.getActiveContentArea());
+		}
+		else
+		{
+			logger.info("Skipping content data");
 		}
 		if(combinedDto.getVideoSettingDto().getOutroPresent())
 		{

@@ -16,4 +16,5 @@ public class CombinedDto implements Serializable {
    private OutroVideoDto outroVideoDto;
    private List<StockDataDto> stockDataDtoList;
    private VideoDetailsDto videoDetailsDto;
+   private ContentAreaDto contentAreaDto;
 }
