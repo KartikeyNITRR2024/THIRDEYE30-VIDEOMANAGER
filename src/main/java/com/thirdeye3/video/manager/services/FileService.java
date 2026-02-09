@@ -10,4 +10,5 @@ public interface FileService {
     FileResponseDto getFileDetails(String s3Key);
 	FileResponseDto uploadFile(FileUploadDto uploadDto);
 	FileResponseDto uploadAudioFile(Long newsId, FileUploadDto uploadDto);
+	FileResponseDto getById(Long id);
 }

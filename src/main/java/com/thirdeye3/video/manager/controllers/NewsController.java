@@ -18,10 +18,6 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
 
-    private <T> Response<T> createSuccessResponse(T data) {
-        return new Response<>(true, 0, null, data);
-    }
-
     @PostMapping
     public Response<NewsDto> createNews(@RequestBody NewsDto newsDto) {
         return new Response<>(true, 0, null, newsService.createNews(newsDto));

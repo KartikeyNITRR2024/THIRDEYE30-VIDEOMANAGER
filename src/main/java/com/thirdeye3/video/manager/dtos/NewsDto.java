@@ -25,5 +25,6 @@ public class NewsDto implements Serializable {
     private String audioContent;
     private Boolean isSoundCreated;
     private Long file;
+    private String fileurl;
     private Video video;
 }

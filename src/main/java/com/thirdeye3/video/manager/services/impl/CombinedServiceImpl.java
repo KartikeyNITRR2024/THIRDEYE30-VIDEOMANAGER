@@ -98,6 +98,14 @@ public class CombinedServiceImpl implements CombinedService {
 		logger.info("Getting news data");
 		combinedDto.setNewsDtoList(newsService.getNewsByVideoId(uuid));
 		
+		if(combinedDto.getNewsDtoList() != null && combinedDto.getNewsDtoList().size() > 0)
+		{
+			for(NewsDto newsDto : combinedDto.getNewsDtoList())
+			{
+				newsDto.setFileurl(fileService.getById(newsDto.getFile()).getS3Key());
+			}
+		}
+		
 		if(combinedDto.getVideoDto().getIsGroupPresent())
 		{
 			logger.info("Getting group data");

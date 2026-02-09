@@ -211,6 +211,33 @@ public class FileServiceImpl implements FileService {
 
         return mapToDto(entity);
     }
+    
+    @Override
+    public FileResponseDto getById(Long id)
+    {
+
+        log.info("Mapping FileMetadata to FileResponseDto | id={}", id);
+        
+        FileMetadata entity = fileRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("File not found in DB | Id={}", id);
+                    return new ResourceNotFoundException("File not found with key: " + id);
+                });
+
+        FileResponseDto dto = FileResponseDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .s3Key(entity.getS3Key())
+                .fileType(entity.getFileType())
+                .size(entity.getSize())
+                .url(entity.getS3Key())
+                .build();
+
+        log.info("DTO mapping completed | id={} | url={}", dto.getId(), dto.getUrl());
+
+        return dto;
+    }
 
     private FileResponseDto mapToDto(FileMetadata entity) {
 
